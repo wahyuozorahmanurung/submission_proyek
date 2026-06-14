@@ -12,8 +12,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Tema grafik
-sns.set_theme(style='minimal')
+# Perbaikan Error Seaborn: Menggunakan 'whitegrid' yang kompatibel dengan semua versi
+sns.set_theme(style='whitegrid')
 
 # 2. FUNGSI LOAD DATA (DENGAN PENANGANAN NAMA KOLOM FLEXIBLE)
 @st.cache_data
@@ -51,7 +51,7 @@ def load_data():
     if c_wday in df.columns:
         df['day_name'] = df[c_wday].map(weekday_map)
     else:
-        df['day_name'] = df['date_parsed'].dt.strftime('%a') # ambil dari tanggal jika kolom gada
+        df['day_name'] = df['date_parsed'].dt.strftime('%a')
 
     # Deteksi Kolom Bulan
     c_mnth = 'mnth_x' if 'mnth_x' in df.columns else 'mnth'
@@ -86,16 +86,15 @@ with st.sidebar:
         
     st.markdown("## **Dashboard Filters**")
     
-    # Mengambil batas tanggal asli dari data
     min_date = all_df['date_parsed'].min().date()
     max_date = all_df['date_parsed'].max().date()
     
-    # Filter Rentang Tanggal (Harus mengembalikan list berisi [start, end])
+    # Penanganan st.date_input agar aman saat inisialisasi pertama kali
     date_range = st.date_input(
         label="📅 Pilih Rentang Tanggal",
         min_value=min_date,
         max_value=max_date,
-        value=[min_date, max_date]
+        value=(min_date, max_date)
     )
     
     # Filter Musim
@@ -114,9 +113,9 @@ with st.sidebar:
         default=all_weather
     )
 
-# 4. PROSES PENYARINGAN DATA UTAMA (Kunci agar grafik berubah!)
-# Memastikan user sudah memilih rentang tanggal yang valid (start dan end sudah diklik)
-if isinstance(date_range, list) or isinstance(date_range, tuple):
+# 4. PROSES PENYARINGAN DATA UTAMA
+# Penanganan aman jika user baru memilih satu tanggal (proses klik rentang belum selesai)
+if isinstance(date_range, tuple) or isinstance(date_range, list):
     if len(date_range) == 2:
         start_date, end_date = date_range
     else:
@@ -126,7 +125,7 @@ else:
     start_date = date_range
     end_date = max_date
 
-# Saring dataframe berdasarkan pilihan user di sidebar
+# Filter data real-time
 main_df = all_df[
     (all_df['date_parsed'].dt.date >= start_date) & 
     (all_df['date_parsed'].dt.date <= end_date) &
@@ -138,7 +137,6 @@ main_df = all_df[
 st.markdown("<h1 style='color: #1E3A8A; font-weight: bold;'>🚲 Bike Rentals Dashboard</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
-# Cek apakah hasil filter menghasilkan data kosong atau tidak
 if main_df.empty:
     st.warning("⚠️ Tidak ada data yang cocok dengan kombinasi filter Anda. Silakan ubah filter di sidebar.")
 else:
@@ -151,7 +149,6 @@ else:
     with col3:
         st.metric(label="Pengguna Kasual", value=f"{main_df['casual'].sum():,}")
     with col4:
-        # Konversi suhu normal (jika data atemp berkisar 0-1, kita kalikan 50 agar jadi Celcius)
         avg_temp = main_df['atemp'].mean() * 50 if main_df['atemp'].max() <= 1 else main_df['atemp'].mean()
         st.metric(label="Rata-rata Suhu", value=f"{avg_temp:.1f} °C")
 
@@ -162,25 +159,30 @@ else:
     day_order = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     
     with col_g1:
-        # Menggunakan data 'main_df' (yang sudah terfilter) bukan 'all_df' lagi!
-        grouped_weekday = main_df.groupby('day_name')['cnt'].sum().reindex(day_order).fillna(0).reset_index()
+        grouped_weekday = main_df.groupby('day_name', observed=False)['cnt'].sum().reindex(day_order).fillna(0).reset_index()
         fig, ax = plt.subplots(figsize=(8, 4))
         sns.barplot(x='day_name', y='cnt', data=grouped_weekday, palette="Blues_r", ax=ax)
         ax.set_title("Total Rentals per Day of Week", fontweight="bold")
+        ax.set_xlabel(None)
+        ax.set_ylabel("Total Rentals")
         st.pyplot(fig)
+        plt.close(fig) # membersihkan memori objek grafik
         
     with col_g2:
-        rentals_per_hour = main_df.groupby('hr')['cnt'].sum().reset_index()
+        rentals_per_hour = main_df.groupby('hr', observed=False)['cnt'].sum().reset_index()
         fig, ax = plt.subplots(figsize=(8, 4))
         sns.lineplot(x='hr', y='cnt', data=rentals_per_hour, color='#10B981', marker="o", ax=ax)
         ax.set_title("Hourly Distribution of Rentals", fontweight="bold")
+        ax.set_xlabel("Hour")
+        ax.set_ylabel("Total Rentals")
         st.pyplot(fig)
+        plt.close(fig)
 
     # --- SEKSI 3: DEMOGRAFI & SUHU ---
     col_g3, col_g4 = st.columns(2)
     
     with col_g3:
-        user_day_df = main_df.groupby('day_name')[['registered', 'casual']].sum().reindex(day_order).fillna(0).reset_index()
+        user_day_df = main_df.groupby('day_name', observed=False)[['registered', 'casual']].sum().reindex(day_order).fillna(0).reset_index()
         fig, ax = plt.subplots(figsize=(8, 4))
         x = np.arange(len(user_day_df['day_name']))
         width = 0.35
@@ -191,9 +193,9 @@ else:
         ax.legend()
         ax.set_title('Demografi Pengguna Berdasarkan Hari', fontweight='bold')
         st.pyplot(fig)
+        plt.close(fig)
 
     with col_g4:
-        # Rentang Suhu Dinamis
         main_df['temp_celcius'] = main_df['atemp'] * 50 if main_df['atemp'].max() <= 1 else main_df['atemp']
         bins = [0, 10, 20, 30, 40]
         labels = ['0-10°C', '11-20°C', '21-30°C', '31-40°C']
@@ -203,9 +205,13 @@ else:
         fig, ax = plt.subplots(figsize=(8, 4))
         sns.barplot(x='temp_bin', y='cnt', data=binned_rentals, palette="YlOrRd", ax=ax)
         ax.set_title('Total Rentals by Temperature Range', fontweight='bold')
+        ax.set_xlabel('Temperature')
+        ax.set_ylabel('Total Rentals')
         st.pyplot(fig)
+        plt.close(fig)
 
 # --- FOOTER ---
+st.markdown("---")
 if st.checkbox('🔍 Tampilkan Pratonton Data Mentah Terfilter'):
     st.dataframe(main_df.head(50), use_container_width=True)
 
