@@ -1,60 +1,146 @@
+## 🌟 Executive Summary
 
-## 🌟 Executive Summary & Impact
-This project transforms raw data from the **Bike Sharing Dataset** into a high-performance decision support tool. It addresses critical business problems such as logistics allocation (fleet distribution), target marketing, and weather-related risk mitigation. 
+This project analyzes the **Bike Sharing Dataset** and presents the results through an interactive dashboard built with Streamlit. The dashboard helps users explore rental patterns based on time, season, weather conditions, and user types (casual and registered). By transforming raw data into visual insights, the project supports data-driven decision-making for operational planning and customer engagement strategies.
 
-* **Live Demo:** `[[Insert Your Streamlit Cloud Link Here](https://wahyuozorahmanurungsubmission1.streamlit.app/)]`
-* **Key Achievements:** Built an end-to-end interactive reporting pipeline with real-time responsive analytics, reducing static report dependencies and introducing automated "What-If" business forecasting.
+**Live Demo:**
+https://wahyuozorahmanurungsubmission1.streamlit.app/
 
----
+### Key Highlights
 
-## 🚀 Key Features
-
-* **🎛️ Real-Time Responsive Filters:** Sift through multiple years of data instantly using date range picker, seasonal parameters, and weather selectors.
-* **📈 Executive KPI Metrics:** High-level counters for Total Rentals, Registered Users, and Casual Users that recalculate dynamically based on active filter criteria.
-* **🎯 Decision-Support Analytics (Advanced):**
-  * *Marketing Strategy:* Visualizes contrasting peak hour trends between casual users and registered commuters to inform targeted promo timing.
-  * *Risk Management:* Calculates percentage drops in revenue/rentals under adverse weather conditions to support temporary station closure decisions.
-* **🔮 Simulation Tool (What-If Analysis):** Features an interactive slider for stakeholder forecasting, allowing immediate calculation of future fleet expansion targets.
+* Interactive dashboard with dynamic filtering capabilities.
+* Real-time KPI monitoring for bike rental performance.
+* Comparative analysis of casual and registered user behavior.
+* Weather and seasonal impact analysis on rental demand.
+* Simple forecasting tool for business scenario simulation.
 
 ---
 
-## 📐 Project Structure & Case Study 
+## 🚀 Features
 
-To demonstrate rigorous data analysis and engineering standards for portfolio evaluation, the development workflow is structured using the **STAR (Situation, Task, Action, Result)** technique:
+### 🎛️ Interactive Filters
 
-### 1. 🔍 Situation
-The bike-sharing operation collected vast amounts of hourly and daily transaction data containing environmental, seasonal, and demographic variables. However, stakeholders and operational managers lacked an efficient, consolidated tool to monitor performance and adjust strategies. Analytical questions were static, and there was no operational bridge to understand how factors like rapid temperature changes or heavy rain impacted hourly resource distribution in real-time.
+Explore the dataset using flexible filters, including date range, season, and weather conditions.
 
-### 2. 🎯 Task
-The primary objectives were to:
-1. Identify monthly rental trends across 2011 and 2012 to discover cyclical patterns and Year-over-Year (YoY) growth.
-2. Determine which seasons and precise temperature thresholds maximize utilization versus which ones introduce severe operational risks.
-3. Design and build a production-ready, ultra-clean web application with zero rendering lag, optimized cache management, and strict separation of customer demographic behavior.
+### 📊 KPI Monitoring
 
-### 3. 🛠️ Action
-* **Data Engineering & Standardization:** Developed a bulletproof preprocessing pipeline inside a cached data block (`@st.cache_data`). Built adaptive column mapping handlers (`cnt_x`, `dteday_x`, etc.) to accommodate dataset variations and prevent pipeline failures during deployment.
-* **User Interface Customization:** Replaced old dark-themed visual grids with a clean, high-contrast, minimalist `whitegrid` layout using Matplotlib/Seaborn. Configured dynamic grid layouts (`st.columns`) ensuring charts render beautifully in side-by-side structures.
-* **Advanced Decision Modules:** Engineered custom aggregation metrics to plot user demography disparities (Casual vs. Registered) and implemented an advanced conditional statistical matrix to quantify risk drops during poor weather.
+Track key metrics such as:
 
-### 4. 🏆 Result
-* **Actionable Insights Uncovered:** * Discovered that Registered users peak heavily during commute hours (08:00 and 17:00), while Casual users peak steadily during midday (11:00 - 16:00). This provides an explicit decision vector: introduce off-peak discounts to Casual users to utilize idling inventory.
-  * Quantified that Fall (Musim Gugur) yields peak utilization, whereas severe weather conditions result in steep, measurable rental drops, allowing managers to dynamically reduce field-staff costs.
-* **Technical Performance:** Achieved rapid load times via computational caching, eliminated background memory leaks using explicit canvas terminations (`plt.close(fig)`), and established a completely dynamic data loop.
+* Total Rentals
+* Registered Users
+* Casual Users
+
+All metrics update automatically based on the selected filters.
+
+### 📈 User Behavior Analysis
+
+Compare rental patterns between casual and registered users to identify differences in usage behavior and peak activity periods.
+
+### 🌦️ Weather Impact Analysis
+
+Evaluate how weather conditions affect rental demand and identify factors that may influence operational performance.
+
+### 🔮 What-If Simulation
+
+A simple forecasting feature that allows users to estimate future rental demand based on adjustable growth assumptions.
 
 ---
 
-## 🛠️ Tech Stack & Dependencies
+## 📐 Project Background
 
-* **Language:** Python 3.9+
-* **Framework:** Streamlit (Web Application Layout & Interactive Inputs)
+### Situation
+
+The Bike Sharing Dataset contains historical rental records along with environmental and seasonal variables. While the data provides valuable information, extracting actionable insights from raw records can be challenging without proper visualization and analysis tools.
+
+### Task
+
+The objectives of this project were to:
+
+1. Analyze rental trends across different time periods.
+2. Identify seasonal and weather-related factors that influence demand.
+3. Compare usage patterns between casual and registered users.
+4. Develop an interactive dashboard that enables efficient data exploration.
+
+### Action
+
+The project was developed through the following stages:
+
+* Data cleaning and preprocessing using Pandas.
+* Exploratory Data Analysis (EDA) to identify trends and patterns.
+* Creation of interactive visualizations using Matplotlib and Seaborn.
+* Dashboard development with Streamlit.
+* Implementation of caching mechanisms to improve application performance.
+
+### Result
+
+The analysis revealed several important insights:
+
+* Registered users tend to show clear commuting patterns, with demand peaking during morning and evening hours.
+* Casual users are more active during midday and leisure periods.
+* Seasonal factors significantly influence rental demand.
+* Adverse weather conditions generally reduce the number of rentals.
+
+These findings can support operational planning, resource allocation, and customer engagement initiatives.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Programming Language:** Python 3.9+
+* **Framework:** Streamlit
 * **Data Processing:** Pandas, NumPy
-* **Data Visualization:** Matplotlib, Seaborn (Custom Whitegrid Theme)
-* **Formatting:** Babel (Currency and Numerical Formatting Support)
+* **Data Visualization:** Matplotlib, Seaborn
+* **Data Formatting:** Babel
 
 ---
 
-## 💿 Installation & Local Setup
+## 📂 Project Structure
 
-Follow these simple steps to cloned this project and run the dashboard locally on your machine:
+```text
+project/
+│
+├── dashboard/
+│   └── dashboard.py
+│
+├── data/
+│   ├── day.csv
+│   └── hour.csv
+│
+├── notebooks/
+│   └── analysis.ipynb
+│
+├── requirements.txt
+└── README.md
+```
 
-1. **Clone the repository:**
+---
+
+## 💻 Installation & Local Setup
+
+Follow the steps below to run the dashboard locally:
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/bike-sharing-analysis.git
+cd bike-sharing-analysis
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the Streamlit application
+
+```bash
+streamlit run dashboard/dashboard.py
+```
+
+### 4. Open the dashboard
+
+Visit the local URL displayed in your terminal, typically:
+
+```text
+http://localhost:8501
+```
