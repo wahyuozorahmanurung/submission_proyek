@@ -1,16 +1,8 @@
-import base64
-
-# Content for README.md
-readme_content = """# 🚲 Bike Rentals Advanced Analytics Dashboard
-
-A dynamic, business-driven interactive dashboard developed with **Streamlit**, **Pandas**, and **Seaborn** to optimize bike-sharing operations. This project delivers actionable insights into rental behaviors, temporal patterns, user demographics, risk management, and predictive simulations.
-
----
 
 ## 🌟 Executive Summary & Impact
 This project transforms raw data from the **Bike Sharing Dataset** into a high-performance decision support tool. It addresses critical business problems such as logistics allocation (fleet distribution), target marketing, and weather-related risk mitigation. 
 
-* **Live Demo:** `[Insert Your Streamlit Cloud Link Here]`
+* **Live Demo:** `[[Insert Your Streamlit Cloud Link Here](https://wahyuozorahmanurungsubmission1.streamlit.app/)]`
 * **Key Achievements:** Built an end-to-end interactive reporting pipeline with real-time responsive analytics, reducing static report dependencies and introducing automated "What-If" business forecasting.
 
 ---
@@ -60,7 +52,7 @@ The primary objectives were to:
 * **Formatting:** Babel (Currency and Numerical Formatting Support)
 
 ---
-link : https://wahyuozorahmanurungsubmission1.streamlit.app/
+
 ## 💿 Installation & Local Setup
 
 Follow these simple steps to cloned this project and run the dashboard locally on your machine:
